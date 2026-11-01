@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Book - Personal Library Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <a href="{{ url_for('book_list') }}" class="back-link">&larr; Back to Library</a>
+        <h1 class="page-title">Add New Book</h1>
+        <p class="page-subtitle">Track a new title you own or plan to read</p>
+    </div>
+</div>
+
+<div class="card form-card">
+    <form method="POST" action="{{ url_for('add_book') }}" class="book-form">
+        <div class="form-row">
+            <div class="form-group flex-2">
+                <label for="title" class="form-label required">Book Title</label>
+                <input type="text" id="title" name="title" class="form-input" placeholder="e.g. The Hobbit" value="{{ form.title or '' }}" required autofocus>
+            </div>
+
+            <div class="form-group flex-2">
+                <label for="author" class="form-label required">Author</label>
+                <input type="text" id="author" name="author" class="form-input" placeholder="e.g. J.R.R. Tolkien" value="{{ form.author or '' }}" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group flex-2">
+                <label for="genre" class="form-label required">Genre</label>
+                <input type="text" id="genre" name="genre" class="form-input" placeholder="e.g. Fantasy, Non-Fiction, Mystery" value="{{ form.genre or '' }}" required>
+            </div>
+
+            <div class="form-group flex-1">
+                <label for="publication_year" class="form-label">Publication Year</label>
+                <input type="number" id="publication_year" name="publication_year" class="form-input" placeholder="e.g. 1937" min="1000" max="2099" value="{{ form.publication_year or '' }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group flex-1">
+                <label for="reading_status" class="form-label required">Reading Status</label>
+                <select id="reading_status" name="reading_status" class="form-select" required>
+                    {% for status in statuses %}
+                        <option value="{{ status }}" {% if form.reading_status == status %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+                <span class="field-hint">Choose: Want to Read, Reading, or Finished</span>
+            </div>
+
+            <div class="form-group flex-1">
+                <label for="rating" class="form-label">Rating (Optional)</label>
+                <select id="rating" name="rating" class="form-select">
+                    <option value="">No rating (unrated)</option>
+                    <option value="5" {% if form.rating == '5' %}selected{% endif %}>⭐⭐⭐⭐⭐ (5 - Exceptional)</option>
+                    <option value="4" {% if form.rating == '4' %}selected{% endif %}>⭐⭐⭐⭐ (4 - Very Good)</option>
+                    <option value="3" {% if form.rating == '3' %}selected{% endif %}>⭐⭐⭐ (3 - Good)</option>
+                    <option value="2" {% if form.rating == '2' %}selected{% endif %}>⭐⭐ (2 - Fair)</option>
+                    <option value="1" {% if form.rating == '1' %}selected{% endif %}>⭐ (1 - Poor)</option>
+                </select>
+                <span class="field-hint">Scale of 1 to 5 stars</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="notes" class="form-label">Personal Notes &amp; Review</label>
+            <textarea id="notes" name="notes" rows="4" class="form-textarea" placeholder="Add personal reflections, favorite quotes, or thoughts on this book...">{{ form.notes or '' }}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Book to Library</button>
+            <a href="{{ url_for('book_list') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingSelect = document.getElementById('rating');
+    const statusSelect = document.getElementById('reading_status');
+
+    if (ratingSelect && statusSelect) {
+        // When rating changes:
+        ratingSelect.addEventListener('change', function() {
+            if (this.value) {
+                // If a rating (1-5 stars) is selected, status must be Finished
+                statusSelect.value = 'Finished';
+            } else {
+                // If rating is cleared to unrated, update status to 'Want to Read'
+                if (statusSelect.value === 'Finished') {
+                    statusSelect.value = 'Want to Read';
+                }
+            }
+        });
+
+        // When reading status changes:
+        statusSelect.addEventListener('change', function() {
+            if (this.value === 'Want to Read' || this.value === 'Reading') {
+                // Books not completed cannot have a star rating
+                ratingSelect.value = '';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
+

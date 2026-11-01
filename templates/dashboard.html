@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Personal Library Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Library Dashboard</h1>
+        <p class="page-subtitle">Overview of your reading journey and book collection</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('add_book') }}" class="btn btn-primary">+ Add New Book</a>
+        <a href="{{ url_for('book_list') }}" class="btn btn-secondary">Browse All Books</a>
+    </div>
+</div>
+
+<!-- Dashboard Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon icon-blue">📖</div>
+        <div class="stat-content">
+            <span class="stat-label">Total Books Owned</span>
+            <span class="stat-value">{{ stats.total_books }}</span>
+            <span class="stat-hint">Across all genres</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-green">✅</div>
+        <div class="stat-content">
+            <span class="stat-label">Books Finished</span>
+            <span class="stat-value">{{ stats.finished_books }}</span>
+            <span class="stat-hint">Completed reading</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-amber">⏳</div>
+        <div class="stat-content">
+            <span class="stat-label">Currently Reading</span>
+            <span class="stat-value">{{ stats.currently_reading }}</span>
+            <span class="stat-hint">In progress</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-purple">⭐</div>
+        <div class="stat-content">
+            <span class="stat-label">Average Rating</span>
+            <div class="stat-rating-wrapper">
+                <span class="stat-value">{{ stats.avg_rating }}</span>
+                <span class="rating-max">/ 5.0</span>
+            </div>
+            <span class="stat-hint">Based on {{ stats.rated_count }} rated books</span>
+        </div>
+    </div>
+</div>
+
+<!-- Secondary Info & Recent Books -->
+<div class="dashboard-sections">
+    <div class="section-card">
+        <div class="section-header">
+            <h2 class="section-title">Recently Added Books</h2>
+            <a href="{{ url_for('book_list') }}" class="link-subtle">View all &rarr;</a>
+        </div>
+
+        {% if recent_books %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>Status</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in recent_books %}
+                            <tr>
+                                <td class="font-medium">
+                                    <a href="{{ url_for('book_detail', book_id=book['id']) }}" class="table-link">
+                                        {{ book['title'] }}
+                                    </a>
+                                </td>
+                                <td>{{ book['author'] }}</td>
+                                <td><span class="genre-pill">{{ book['genre'] }}</span></td>
+                                <td>
+                                    <span class="status-badge status-{{ book['reading_status'] | lower | replace(' ', '-') }}">
+                                        {{ book['reading_status'] }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if book['rating'] %}
+                                        <span class="stars">
+                                            {% for i in range(book['rating']) %}★{% endfor %}
+                                            {% for i in range(5 - book['rating']) %}<span class="star-empty">★</span>{% endfor %}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">Not rated</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{{ url_for('book_detail', book_id=book['id']) }}" class="btn-action" title="View details">👁</a>
+                                        <a href="{{ url_for('edit_book', book_id=book['id']) }}" class="btn-action" title="Edit book">✏️</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No books in your library yet.</p>
+                <a href="{{ url_for('add_book') }}" class="btn btn-primary btn-sm">Add your first book</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Status Breakdown -->
+    <div class="section-card">
+        <h2 class="section-title">Reading Queue</h2>
+        <div class="queue-summary">
+            <div class="queue-item">
+                <div class="queue-info">
+                    <span class="status-badge status-want-to-read">Want to Read</span>
+                    <span class="queue-count">{{ stats.want_to_read }} books</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill fill-amber" style="width: {{ (stats.want_to_read / stats.total_books * 100) if stats.total_books > 0 else 0 }}%;"></div>
+                </div>
+            </div>
+
+            <div class="queue-item">
+                <div class="queue-info">
+                    <span class="status-badge status-reading">Currently Reading</span>
+                    <span class="queue-count">{{ stats.currently_reading }} books</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill fill-blue" style="width: {{ (stats.currently_reading / stats.total_books * 100) if stats.total_books > 0 else 0 }}%;"></div>
+                </div>
+            </div>
+
+            <div class="queue-item">
+                <div class="queue-info">
+                    <span class="status-badge status-finished">Finished</span>
+                    <span class="queue-count">{{ stats.finished_books }} books</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill fill-green" style="width: {{ (stats.finished_books / stats.total_books * 100) if stats.total_books > 0 else 0 }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-tips-card">
+            <h4>💡 Quick Tips</h4>
+            <p>You can filter and search your catalog anytime from the <a href="{{ url_for('book_list') }}">Browse Books</a> page or quickly update reading statuses directly on each book's detail page.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

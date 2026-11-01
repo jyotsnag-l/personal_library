@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Books - Personal Library Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Personal Book Library</h1>
+        <p class="page-subtitle">View, search, and filter books by author, genre, or reading status</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('add_book') }}" class="btn btn-primary">+ Add New Book</a>
+    </div>
+</div>
+
+<!-- Filter and Search Bar -->
+<div class="card filter-card">
+    <form method="GET" action="{{ url_for('book_list') }}" class="filter-form">
+        <div class="filter-group filter-search">
+            <label for="q" class="filter-label">Search</label>
+            <input type="text" id="q" name="q" value="{{ search_query }}" placeholder="Title, author, or notes..." class="form-input">
+        </div>
+
+        <div class="filter-group">
+            <label for="author" class="filter-label">Author</label>
+            <select id="author" name="author" class="form-select">
+                <option value="">All Authors</option>
+                {% for author in authors %}
+                    <option value="{{ author }}" {% if selected_author == author %}selected{% endif %}>{{ author }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="genre" class="filter-label">Genre</label>
+            <select id="genre" name="genre" class="form-select">
+                <option value="">All Genres</option>
+                {% for genre in genres %}
+                    <option value="{{ genre }}" {% if selected_genre == genre %}selected{% endif %}>{{ genre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="status" class="filter-label">Reading Status</label>
+            <select id="status" name="status" class="form-select">
+                <option value="">All Statuses</option>
+                {% for status in statuses %}
+                    <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-actions">
+            <button type="submit" class="btn btn-primary btn-filter">Filter</button>
+            {% if search_query or selected_author or selected_genre or selected_status %}
+                <a href="{{ url_for('book_list') }}" class="btn btn-outline">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Results Header -->
+<div class="results-meta">
+    <span>Showing <strong>{{ books | length }}</strong> book{% if books | length != 1 %}s{% endif %}</span>
+    {% if search_query or selected_author or selected_genre or selected_status %}
+        <span class="active-filters">
+            (Filtered {% if search_query %}by query: "{{ search_query }}"{% endif %})
+        </span>
+    {% endif %}
+</div>
+
+<!-- Books List / Table -->
+{% if books %}
+    <div class="card table-card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Genre</th>
+                        <th>Year</th>
+                        <th>Status</th>
+                        <th>Rating</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td class="font-medium">
+                                <a href="{{ url_for('book_detail', book_id=book['id']) }}" class="table-link">
+                                    {{ book['title'] }}
+                                </a>
+                            </td>
+                            <td>{{ book['author'] }}</td>
+                            <td><span class="genre-pill">{{ book['genre'] }}</span></td>
+                            <td>{{ book['publication_year'] or '—' }}</td>
+                            <td>
+                                <span class="status-badge status-{{ book['reading_status'] | lower | replace(' ', '-') }}">
+                                    {{ book['reading_status'] }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if book['rating'] %}
+                                    <span class="stars" title="{{ book['rating'] }} of 5 stars">
+                                        {% for i in range(book['rating']) %}★{% endfor %}
+                                        {% for i in range(5 - book['rating']) %}<span class="star-empty">★</span>{% endfor %}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">Unrated</span>
+                                {% endif %}
+                            </td>
+                            <td class="notes-cell">
+                                {% if book['notes'] %}
+                                    <span class="notes-preview" title="{{ book['notes'] }}">
+                                        {{ book['notes'] | truncate(45) }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('book_detail', book_id=book['id']) }}" class="btn-action" title="View details">👁</a>
+                                    <a href="{{ url_for('edit_book', book_id=book['id']) }}" class="btn-action" title="Edit book">✏️</a>
+                                    
+                                    <form method="POST" action="{{ url_for('delete_book', book_id=book['id']) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove \'{{ book['title'] }}\'?');">
+                                        <button type="submit" class="btn-action btn-action-danger" title="Delete book">🗑️</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="card empty-card">
+        <div class="empty-icon">🔍</div>
+        <h3>No books found</h3>
+        <p>No books match your current search or filter criteria.</p>
+        <div class="empty-actions">
+            {% if search_query or selected_author or selected_genre or selected_status %}
+                <a href="{{ url_for('book_list') }}" class="btn btn-outline">Clear Filters</a>
+            {% endif %}
+            <a href="{{ url_for('add_book') }}" class="btn btn-primary">+ Add a New Book</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
