@@ -1,6 +1,6 @@
 # Personal Library Manager 📚
 
-A clean, responsive web application built with **Python**, **Flask**, **SQLite**, **HTML5**, and **CSS3** for tracking books you own and books you want to read.
+A clean, responsive web application built with **Python**, **FastAPI**, **SQLite**, **HTML5**, and **CSS3** for tracking books you own and books you want to read.
 
 ---
 
@@ -23,32 +23,11 @@ A clean, responsive web application built with **Python**, **Flask**, **SQLite**
 
 ---
 
-## Project Structure
-
-```
-├── app.py                 # Flask web application routes and controller logic
-├── database.py            # SQLite schema, connection management, parameterized queries
-├── requirements.txt       # Python package dependencies
-├── README.md              # Project documentation and setup guide
-├── BUGS.md                # Reproduction guide for the two intentional runtime bugs
-├── library.db             # SQLite database file (created automatically on startup)
-├── static/
-│   └── style.css          # Modern CSS styling for cards, tables, badges, and layout
-└── templates/
-    ├── base.html          # Base template with navigation, alerts, and footer
-    ├── dashboard.html     # Dashboard view with summary statistics and recent books
-    ├── books.html         # Book browsing list with search and filter controls
-    ├── book_detail.html   # Detailed book view and quick status changer
-    ├── add_book.html      # Form to add a new book to the library
-    └── edit_book.html     # Form to edit book details, ratings, and notes
-```
-
----
-
 ## Dependencies & Prerequisites
 
 - **Python 3.8+** (Python 3.10+ recommended)
-- **Flask 3.0+**
+- **FastAPI** & **Uvicorn**
+- **Jinja2** & **python-multipart**
 
 All dependencies are specified in `requirements.txt`. SQLite is included with Python's standard library.
 
@@ -56,29 +35,17 @@ All dependencies are specified in `requirements.txt`. SQLite is included with Py
 
 ## Installation & Setup
 
-1. **Clone or navigate into the project directory**:
+1. **Open PowerShell / Terminal** in the project directory:
    ```bash
-   cd /path/to/personal-library
+   cd c:\Users\sreej\Desktop\personal_library
    ```
 
-2. **(Optional) Create and activate a virtual environment**:
-   - On Windows (PowerShell):
-     ```powershell
-     python -m venv venv
-     .\venv\Scripts\Activate.ps1
-     ```
-   - On macOS/Linux:
-     ```bash
-     python3 -m venv venv
-     source venv/bin/activate
-     ```
-
-3. **Install dependencies**:
+2. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Initialize database** *(automatic on first run, but can also be seeded manually)*:
+3. **(Optional) Seed the database**:
    ```bash
    python database.py --seed
    ```
@@ -87,14 +54,20 @@ All dependencies are specified in `requirements.txt`. SQLite is included with Py
 
 ## Running the Application
 
-Start the Flask development server:
+You can start the server using either method:
 
+### Method 1 (Direct Python command):
 ```bash
 python app.py
 ```
 
-Then open your browser and navigate to:
-**[http://127.0.0.1:5000](http://127.0.0.1:5000)**
+### Method 2 (Uvicorn CLI):
+```bash
+uvicorn app:app --reload --port 8000
+```
+
+Once started, open your web browser and go to:
+👉 **http://127.0.0.1:8000** (or **http://localhost:8000**)
 
 ---
 

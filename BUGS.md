@@ -12,12 +12,13 @@ This document documents the two intentional runtime bugs present in the **Person
    ```bash
    pip install -r requirements.txt
    ```
-2. **Start the Flask development server**:
+2. **Start the FastAPI development server**:
    ```bash
    python app.py
    ```
+   *(or `uvicorn app:app --reload --port 8000`)*
 3. **Open the web application** in your browser at:
-   **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
+   **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
 
 ---
 
