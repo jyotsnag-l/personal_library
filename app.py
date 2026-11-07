@@ -36,7 +36,7 @@ app = FastAPI(
 # Recovery SDK middleware for error tracking and recovery
 app.add_middleware(
     RecoveryMiddleware,
-    project_id="proj_04102d07",        # your project ID from the platform
+    project_id="proj_be3cacce",        # your project ID from the platform
     environment="production",
     api_url="http://127.0.0.1:8000"     # your Overmend API
 )
