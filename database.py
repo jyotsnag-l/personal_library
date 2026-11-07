@@ -190,12 +190,8 @@ def get_dashboard_stats():
         rated_rows = conn.execute("SELECT rating FROM books WHERE rating IS NOT NULL").fetchall()
         ratings = [row['rating'] for row in rated_rows]
 
-        # -------------------------------------------------------------
-        # INTENTIONAL BUG 1:
-        # Does not check whether `ratings` is empty before dividing.
-        # If there are no rated books, len(ratings) is 0 -> ZeroDivisionError!
-        # -------------------------------------------------------------
-        avg_rating = round(sum(ratings) / len(ratings), 1)
+        # Guard against division by zero when no books are rated
+        avg_rating = round(sum(ratings) / len(ratings), 1) if ratings else 0.0
 
         return {
             'total_books': total_books,
