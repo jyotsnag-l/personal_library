@@ -63,11 +63,11 @@ python app.py
 
 ### Method 2 (Uvicorn CLI):
 ```bash
-uvicorn app:app --reload --port 8000
+uvicorn app:app --reload --port 2500
 ```
 
 Once started, open your web browser and go to:
-👉 **http://127.0.0.1:8000** (or **http://localhost:8000**)
+👉 **http://127.0.0.1:2500** (or **http://localhost:2500**)
 
 ---
 

@@ -440,5 +440,5 @@ if __name__ == "__main__":
     import uvicorn
     # Initialize DB if needed
     database.init_db(seed=True)
-    print("Personal Library Manager running at http://127.0.0.1:8000")
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+    print("Personal Library Manager running at http://127.0.0.1:2500")
+    uvicorn.run("app:app", host="127.0.0.1", port=2500, reload=True)

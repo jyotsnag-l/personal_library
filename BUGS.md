@@ -16,9 +16,9 @@ This document documents the two intentional runtime bugs present in the **Person
    ```bash
    python app.py
    ```
-   *(or `uvicorn app:app --reload --port 8000`)*
+   *(or `uvicorn app:app --reload --port 2500`)*
 3. **Open the web application** in your browser at:
-   **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+   **[http://127.0.0.1:2500](http://127.0.0.1:2500)**
 
 ---
 
@@ -47,26 +47,26 @@ ZeroDivisionError: division by zero
 
 #### Step 1: Open the Books List
 - Navigate to the Browse Books page:
-  **URL:** [http://127.0.0.1:5000/books](http://127.0.0.1:5000/books) (or click **Browse All Books** or **Browse Books** in the navigation bar).
+  **URL:** [http://127.0.0.1:2500/books](http://127.0.0.1:2500/books) (or click **Browse All Books** or **Browse Books** in the navigation bar).
 
 #### Step 2: Clear Ratings or Delete Rated Books via the UI
 By default, the sample database contains 5 books (*The Great Gatsby*, *To Kill a Mockingbird*, *1984*, *Dune*, and *Atomic Habits*). Four of them have star ratings. You can remove all ratings using either of the following two UI methods:
 
 - **Method A (Edit books to unrated):**
   1. For each book with stars (*The Great Gatsby*, *To Kill a Mockingbird*, *1984*, *Atomic Habits*):
-     - Click the ✏️ (**Edit**) button in the **Actions** column on [http://127.0.0.1:5000/books](http://127.0.0.1:5000/books) (or navigate to `http://127.0.0.1:5000/books/<id>/edit`).
+     - Click the ✏️ (**Edit**) button in the **Actions** column on [http://127.0.0.1:2500/books](http://127.0.0.1:2500/books) (or navigate to `http://127.0.0.1:2500/books/<id>/edit`).
      - In the **Rating** dropdown field, select **"No rating (unrated)"** (the first option).
      - Notice that the **Reading Status** automatically updates to **"Want to Read"** (or change it to "Want to Read") so that completed statuses like "Finished" don't display alongside "Unrated", which looks inconsistent in the table.
      - Click the **Save Changes** button.
-  2. Confirm on [http://127.0.0.1:5000/books](http://127.0.0.1:5000/books) that every book displays `Unrated` in the Rating column and `Want to Read` in the Status column.
+  2. Confirm on [http://127.0.0.1:2500/books](http://127.0.0.1:2500/books) that every book displays `Unrated` in the Rating column and `Want to Read` in the Status column.
 
 - **Method B (Delete rated books):**
-  1. In the books table on [http://127.0.0.1:5000/books](http://127.0.0.1:5000/books), click the 🗑️ (**Delete**) button for each rated book.
+  1. In the books table on [http://127.0.0.1:2500/books](http://127.0.0.1:2500/books), click the 🗑️ (**Delete**) button for each rated book.
   2. Click **OK** on the browser confirmation prompt (`Are you sure you want to remove '...'?`).
   3. Leave only *Dune* (which is unrated) or delete all books.
 
 #### Step 3: Trigger the Bug via the UI
-- Click **Dashboard** in the top navigation bar (or navigate directly to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)).
+- Click **Dashboard** in the top navigation bar (or navigate directly to [http://127.0.0.1:2500/](http://127.0.0.1:2500/)).
 
 #### Observed Error
 The web page fails to load and the browser displays Flask's debug error page (HTTP 500):
