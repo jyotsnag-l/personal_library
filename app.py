@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 import jinja2
+# pyrefly: ignore[missing-import]
 from recovery_sdk.integrations.fastapi import RecoveryMiddleware
 import database
 
@@ -440,5 +441,5 @@ if __name__ == "__main__":
     import uvicorn
     # Initialize DB if needed
     database.init_db(seed=True)
-    print("Personal Library Manager running at http://127.0.0.1:2500")
-    uvicorn.run("app:app", host="127.0.0.1", port=2500, reload=True)
+    print("Personal Library Manager running at http://127.0.0.1:9000")
+    uvicorn.run("app:app", host="127.0.0.1", port=9000, reload=True)

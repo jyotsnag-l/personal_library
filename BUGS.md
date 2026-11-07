@@ -16,9 +16,9 @@ This document documents the two intentional runtime bugs present in the **Person
    ```bash
    python app.py
    ```
-   *(or `uvicorn app:app --reload --port 2500`)*
+   *(or `uvicorn app:app --reload --port 9000`)*
 3. **Open the web application** in your browser at:
-   **[http://127.0.0.1:2500](http://127.0.0.1:2500)**
+   **[http://127.0.0.1:9000](http://127.0.0.1:9000)**
 
 ---
 
