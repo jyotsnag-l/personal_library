@@ -11,14 +11,6 @@ import jinja2
 from recovery_sdk.integrations.fastapi import RecoveryMiddleware
 import database
 
-app.add_middleware(
-    RecoveryMiddleware,
-    project_id="proj_04102d07",        # your project ID from the platform
-    environment="production",
-    api_url="http://127.0.0.1:8000" # your Overmend API
-
-)
-
 # Directory setup
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -38,6 +30,14 @@ app = FastAPI(
     title="Personal Library Manager",
     description="Track books you own and books you want to read",
     lifespan=lifespan
+)
+
+# Recovery SDK middleware for error tracking and recovery
+app.add_middleware(
+    RecoveryMiddleware,
+    project_id="proj_04102d07",        # your project ID from the platform
+    environment="production",
+    api_url="http://127.0.0.1:8000"     # your Overmend API
 )
 
 # Enable session support for flash messages and state
