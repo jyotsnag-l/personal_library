@@ -415,9 +415,6 @@ async def update_status(request: Request, book_id: int):
     # instead of displaying a friendly validation message.
     # -------------------------------------------------------------
     if new_status not in VALID_STATUSES:
-        flash(request, f"Unsupported reading status: '{new_status}'.", "error")
-        redirect_target = request.referrer or str(request.url_for("book_detail", book_id=book_id))
-        return RedirectResponse(url=redirect_target, status_code=303)
         raise ValueError(
             f"Unsupported reading status: '{new_status}'. Supported statuses are: {', '.join(VALID_STATUSES)}"
         )
