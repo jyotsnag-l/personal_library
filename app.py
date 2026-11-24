@@ -414,7 +414,17 @@ async def update_status(request: Request, book_id: int):
     # Updating a book to an unsupported reading status causes an unhandled error (ValueError)
     # instead of displaying a friendly validation message.
     # -------------------------------------------------------------
+    # Validate the requested status. If it is not one of the supported values we
+    # show a friendly flash message and redirect back to the book detail page
+    # instead of raising an unhandled exception.
     if new_status not in VALID_STATUSES:
+        flash(
+            request,
+            f"Unsupported reading status: '{new_status}'. Please choose one of: {', '.join(VALID_STATUSES)}",
+            "error",
+        )
+        redirect_target = request.referrer or str(request.url_for("book_detail", book_id=book_id))
+        return RedirectResponse(url=redirect_target, status_code=303)
         raise ValueError(
             f"Unsupported reading status: '{new_status}'. Supported statuses are: {', '.join(VALID_STATUSES)}"
         )
